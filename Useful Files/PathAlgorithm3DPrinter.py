@@ -27,8 +27,7 @@ def getIntersects(horizontal,line):
 
 # initialize the gcode with certain parameters
 def initGcode(speed, temp):
-    gcode = ""
-    gcode += "G1 F%d\n" %speed #In mm/minute
+    gcode = "G1 F%d\n" %speed #In mm/minute
     gcode += "M109 S%d T0\n" %temp #In degrees celsius
 
 # finds distance between two points
