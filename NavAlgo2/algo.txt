@@ -1,1 +1,9 @@
-1. 
+Input: List of vertices (ordered either clockwise or anticlockwise)
+Output: List of points at which pictures will be taken
+
+Between every pair of consecutive elements of the input list (call it L-input), wrapping around the last and first elements:
+
+    1. Create a list of points falling on the line between these vertices. These are the points on the perimeter where pictures will be taken. Call this list of points P-list.
+    2. For each point in P-list (call it point1), check which other pair of consecutive vertices in L-input contains the x-coordinate of point1 between them. If no other pair of consecutive vertices contains this x-coordinate, then move on to the next iteration of the loop. Else, pick the pair of vertices which is immediately below the current point in P-list; label as point2 the point on the line connecting these vertices which has the same x-coordinate as point1. Draw a vertical line segment from point1 to point2.
+    3. We will take photos of the points on the line segment from point 1 to point 2 - add these points to the output list.
+
