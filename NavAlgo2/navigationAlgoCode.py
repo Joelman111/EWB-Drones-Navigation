@@ -1,5 +1,8 @@
-#Buggy code below
+#Add test cases and check code with more convex polygons
+
 import math
+import copy
+
 def getAllPoints(vertexList, distance):
     #main function: takes in initial input and returns final output
     perimeterPoints = getPerimeterPoints(vertexList, distance)
@@ -24,7 +27,7 @@ def getPointsBtwVertices(v1, v2, dx):
     if math.isclose(v1x, v2x):
         return getPointsonVerticalLine(v1x, v1y, v2y, dx)
     if v2x-v1x<0: dx = -dx
-    xPoints = (v2x - v1x) // dx
+    xPoints = int((v2x - v1x) / dx)
     dy = (v2y - v1y) / (v2x - v1x) * dx
     x, y = v1x, v1y
     for pointNo in range(xPoints):
@@ -40,12 +43,21 @@ def getOutputPoints(vertexList, perimeterPoints, distance):
         x = pPoint[0]
         y0 = pPoint[1]
         y1 = getLineEnd(x, y0, perimeterPoints)
-        if y1 == None: continue
-        y0, y1 = min(y0, y1), max(y0, y1)
-        outputPoints += getPointsonVerticalLine(x, y0, y1, distance)
+        #print(pPoint, ": ", (x,y1))
+        if y1 == None:
+            additionalPoints = [pPoint]
+        else:
+            additionalPoints = getPointsonVerticalLine(x, y0, y1, distance) + \
+            [(x, y1)]
+        additionalPointsCopy = copy.deepcopy(additionalPoints)
+        for point in additionalPointsCopy:
+            if point in outputPoints:
+                additionalPoints.remove(point)
+        outputPoints += additionalPoints
     return outputPoints
 
 def getLineEnd(x, yStart, perimeterPoints):
+    #print(perimeterPoints)
     #gets the end of a vertical line of photos given the xcoordinate and the
     #starting point; if no such line, returns None
     pointBelowExists = False
@@ -56,12 +68,14 @@ def getLineEnd(x, yStart, perimeterPoints):
         or (x, yStart) == perimeterPoints[index2]:
             continue
         x0, x1 = perimeterPoints[index1][0], perimeterPoints[index2][0]
-        if min(x0, x1)<= x <= max(x0, x1):
+        if min(x0, x1)<= x <= max(x0, x1) and x0 != x1:
+            #print(x0, x1)
             y0, y1 = perimeterPoints[index1][1], perimeterPoints[index2][1]
-            if math.isclose(x0, x1):
-                y = min(y0, y1)
-            else:
-                y = (y1-y0)/(x1-x0) * (x-x0) + y0
+            #if math.isclose(x0, x1):
+            #    y = max(y0, y1)
+                #print(y,"!")
+            #else:
+            y = (y1-y0)/(x1-x0) * (x-x0) + y0
             if y > yStart and (yEnd == None or y < yEnd):
                 pointBelowExists, yEnd = True, y
     return yEnd
@@ -79,4 +93,4 @@ def getPointsonVerticalLine(x, y0, y1, distance):
         y += distance
     return points
 
-#print(getAllPoints([(0, 0), (2, 0), (2, 2), (0, 2)], 1))
+#print(getAllPoints([(0, 0), (3, 0), (1.5, 3**0.5 * 1.5)], 1))
