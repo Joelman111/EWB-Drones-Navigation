@@ -1,5 +1,5 @@
-#WARNING: Untested, undebugged code below
-
+#Buggy code below
+import math
 def getAllPoints(vertexList, distance):
     #main function: takes in initial input and returns final output
     perimeterPoints = getPerimeterPoints(vertexList, distance)
@@ -20,12 +20,11 @@ def getPointsBtwVertices(v1, v2, dx):
     #perimeter
     points = []
     v1x, v2x = v1[0], v2[0]
-    v1x, v2x = min(v1x, v2x), max(v1x, v2x)
     v1y, v2y = v1[1], v2[1]
-    v1y, v2y = min(v1y, v2y), max(v1y, v2y)
     if math.isclose(v1x, v2x):
-        return getPointsonVerticalLine(v1x, v1y, v2y, dx)  
-    xPoints = (v2x - v1x) // d + 1
+        return getPointsonVerticalLine(v1x, v1y, v2y, dx)
+    if v2x-v1x<0: dx = -dx
+    xPoints = (v2x - v1x) // dx
     dy = (v2y - v1y) / (v2x - v1x) * dx
     x, y = v1x, v1y
     for pointNo in range(xPoints):
@@ -51,27 +50,33 @@ def getLineEnd(x, yStart, perimeterPoints):
     #starting point; if no such line, returns None
     pointBelowExists = False
     yEnd = None
-    for index1 in perimeterPoints:
+    for index1 in range(len(perimeterPoints)):
         index2 = (index1 + 1)%len(perimeterPoints)
         if (x, yStart) == perimeterPoints[index1] \
         or (x, yStart) == perimeterPoints[index2]:
             continue
         x0, x1 = perimeterPoints[index1][0], perimeterPoints[index2][0]
-        if min(x0, x1)< x < max(x0, x1):
+        if min(x0, x1)<= x <= max(x0, x1):
             y0, y1 = perimeterPoints[index1][1], perimeterPoints[index2][1]
             if math.isclose(x0, x1):
                 y = min(y0, y1)
             else:
                 y = (y1-y0)/(x1-x0) * (x-x0) + y0
             if y > yStart and (yEnd == None or y < yEnd):
-                pointBelowExists, yEnd = True, yMin
+                pointBelowExists, yEnd = True, y
     return yEnd
 
 def getPointsonVerticalLine(x, y0, y1, distance):
     #gets points along a vertical line where a photo should be taken
+    upToDown = True
+    if y1<y0:
+        distance = -distance
+        upToDown = False
     points = []
     y = y0
-    while y<y1:
-        points.append(x, y)
+    while (y<y1 and upToDown) or (y>y1 and not upToDown):
+        points.append((x, y))
         y += distance
     return points
+
+#print(getAllPoints([(0, 0), (2, 0), (2, 2), (0, 2)], 1))
