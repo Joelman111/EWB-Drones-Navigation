@@ -82,7 +82,7 @@ def getLineEnd(x, yStart, perimeterPoints):
             (x,yStart): position of perimeter point
             perimeterPoints: list of perimeter points, used to check which one is immediately below (x,yStart)
          returns:
-            yEnd: when combined into (x,yEnd), it is the coordinates of the point immediately below (x,yStart)
+            yEnd: when combined into (x,yEnd), it is the coordinates of the point on the perimeter immediately below (x,yStart)
                 NOTE: yEnd is None if there is no such point
     """
     pointBelowExists = False
