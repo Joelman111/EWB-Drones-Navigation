@@ -9,18 +9,31 @@ def getAllPoints(vertexList, distance):
     return getOutputPoints(vertexList, perimeterPoints, distance)
 
 def getPerimeterPoints(vertexList, distance):
-#takes in ordered list of vertices, and horizontal distance between every two
-#points where a photo should be taken
+    """
+        accepts: 
+            vertexList: ordered list of vertices of the region
+            distance: stride length between points where a photo should be taken
+        returns:
+            ordered list of points along the perimeter where a picture needs to be taken
+
+    """
     perimeterPoints = []
     for index1 in range(len(vertexList)):
         index2 = (index1 + 1) % len(vertexList)
         vertex1, vertex2 = vertexList[index1], vertexList[index2]
-        perimeterPoints += getPointsBtwVertices(vertex1, vertex2, distance)
+        perimeterPoints += getPointsBtwnVertices(vertex1, vertex2, distance)
     return perimeterPoints
 
-def getPointsBtwVertices(v1, v2, dx):
-    #gets points to take photo at between every pair of vertices, along the
-    #perimeter
+def getPointsBtwnVertices(v1, v2, dx):
+    """
+        accepts:
+            v1: the position of one vertex
+            v2: the position of the other vertex
+            dx: stride length
+        returns:
+            points: ordered list of points between v1 and v2 at which to take a photo
+
+    """
     points = []
     v1x, v2x = v1[0], v2[0]
     v1y, v2y = v1[1], v2[1]
@@ -37,7 +50,15 @@ def getPointsBtwVertices(v1, v2, dx):
     return points
 
 def getOutputPoints(vertexList, perimeterPoints, distance):
-    #returns final list of points at which to take a photo
+    """
+        accepts: 
+            vertexList: ordered list of vertices of the region
+            perimeterPoints: ordered list of points on the perimeter where a photo is to be taken
+            distance: the stride length between photos
+        returns:
+            ordered list of points at which to take a photo
+    """
+    #
     outputPoints = []
     for pPoint in perimeterPoints:
         x = pPoint[0]
@@ -57,9 +78,13 @@ def getOutputPoints(vertexList, perimeterPoints, distance):
     return outputPoints
 
 def getLineEnd(x, yStart, perimeterPoints):
-    #print(perimeterPoints)
-    #gets the end of a vertical line of photos given the xcoordinate and the
-    #starting point; if no such line, returns None
+    """accepts:
+            (x,yStart): position of perimeter point
+            perimeterPoints: list of perimeter points, used to check which one is immediately below (x,yStart)
+         returns:
+            yEnd: when combined into (x,yEnd), it is the coordinates of the point on the perimeter immediately below (x,yStart)
+                NOTE: yEnd is None if there is no such point
+    """
     pointBelowExists = False
     yEnd = None
     for index1 in range(len(perimeterPoints)):
@@ -81,7 +106,13 @@ def getLineEnd(x, yStart, perimeterPoints):
     return yEnd
 
 def getPointsonVerticalLine(x, y0, y1, distance):
-    #gets points along a vertical line where a photo should be taken
+    """
+        accepts: 
+            (x,y0) and (x,y1) are the points closest to each other on a vertical line crossing the shape
+            distance: the stride length between photos
+        returns:
+            list of points along a vertical line where a photo should be taken
+    """
     upToDown = True
     if y1<y0:
         distance = -distance
@@ -93,4 +124,5 @@ def getPointsonVerticalLine(x, y0, y1, distance):
         y += distance
     return points
 
-#print(getAllPoints([(0, 0), (3, 0), (1.5, 3**0.5 * 1.5)], 1))
+#TEST CASES
+print(getAllPoints([(0, 0), (3, 0), (1.5, 3**0.5 * 1.5)], 1))
