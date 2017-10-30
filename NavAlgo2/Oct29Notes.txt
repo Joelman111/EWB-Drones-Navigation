@@ -1,1 +1,5 @@
 NOTES:
+    -Algorithm is written and will be annotated
+    -Researching WebAPI vs tkinter test bench
+    -tkinter will be faster
+    -might want to put code into interface format
