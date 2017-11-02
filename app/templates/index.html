@@ -32,9 +32,9 @@
                   type="submit" name="action"
                   onclick="draw_polygon();">Draw Polygon
             </button>
-            <button id="clear" class="btn waves-effect waves-light"
+            <button id="clear_btn" class="btn waves-effect waves-light"
                     type="submit" name="action"
-                    onclick="clear();">Clear
+                    onclick="clear_fn();">Clear
               </button>
         </div>
         <div id="markers"></div>
@@ -46,6 +46,7 @@
     var map;
     var infoWindow;
     var coordinates = [];
+    var markers = [];
     var polygon;
 
     function initMap() {
@@ -89,7 +90,6 @@
       }
       google.maps.event.addListener(map, 'click', function(event) {
         place_marker(event.latLng);
-        coordinates.push(event.latLng);
 
       });
     }
@@ -107,6 +107,8 @@
         position: location,
         map: map
       });
+      coordinates.push(location);
+      markers.push(marker);
       document.getElementById("markers").appendChild(document.createTextNode(location));
     }
 
@@ -127,18 +129,18 @@
       polygon.setMap(map);
     }
 
-    // Sets the map on all markers in the array.
-    function setMapOnAll(map) {
-      for (var i = 0; i < coordinates.length; i++) {
-        coordinates[i].setMap(map);
+    function clear_fn() {
+      for (var i = 0; i < markers.length; i++) {
+        markers[i].setMap(null);
       }
+      markers = [];
+      coordinates = [];
+      polygon.setMap(null);
+      document.getElementById("markers").innerHTML = "";
+      console.log("clear");
+
     }
 
-    function clear() {
-      polygon.setMap(null);
-      setMapOnAll(null);
-      coordinates = [];
-    }
   </script>
   <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
   <script type="text/javascript" src="js/materialize.min.js"></script>
