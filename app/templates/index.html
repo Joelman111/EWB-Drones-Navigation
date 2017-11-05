@@ -45,7 +45,7 @@
   <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
   <script type="text/javascript" src="js/materialize.min.js"></script>
   <script type="text/javascript" src="javascripts/jquery.googlemap.js"></script>
-  
+
   <script>
     var map;
     var infoWindow;
@@ -135,28 +135,7 @@
     }
 
 
-      $(document).ready(function(){
-      $('#draw').submit(function(event){
-        if (coordinates.length == 0) {
-          return;
-        } else {
-          polygon.setMap(null);
-        }
-        polygon = new google.maps.Polygon({
-          paths: coordinates,
-          strokeColor: '#FF0000',
-          strokeOpacity: 0.8,
-          strokeWeight: 2,
-          fillColor: '#FF0000',
-          fillOpacity: 0.35
-        });
-        polygon.setMap(map);
-
-        $.get("/get_path/" + coordinates, function(resp){
-          console.log(resp);
-        })
-      });
-    });
+  
 
 
 
