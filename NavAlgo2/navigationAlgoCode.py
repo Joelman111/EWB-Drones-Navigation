@@ -85,7 +85,7 @@ def getLineEnd(x, yStart, perimeterPoints):
             yEnd: when combined into (x,yEnd), it is the coordinates of the point on the perimeter immediately below (x,yStart)
                 NOTE: yEnd is None if there is no such point
     """
-    pointBelowExists = False
+    pointsBelow = 0
     yEnd = None
     for index1 in range(len(perimeterPoints)):
         index2 = (index1 + 1)%len(perimeterPoints)
@@ -102,7 +102,9 @@ def getLineEnd(x, yStart, perimeterPoints):
             #else:
             y = (y1-y0)/(x1-x0) * (x-x0) + y0
             if y > yStart and (yEnd == None or y < yEnd):
-                pointBelowExists, yEnd = True, y
+                pointsBelow += 1
+                yEnd = y
+    if pointsBelow % 2 == 0: yEnd = None
     return yEnd
 
 def getPointsonVerticalLine(x, y0, y1, distance):
