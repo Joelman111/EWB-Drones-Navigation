@@ -13,6 +13,11 @@ def get_path(coords):
     print(coords)
     return
 
+@app.route('/static/<path:path>')
+def send_js(path):
+    return send_from_directory('static', path)
+
+
 def main():
     app.run(host='0.0.0.0')
 
