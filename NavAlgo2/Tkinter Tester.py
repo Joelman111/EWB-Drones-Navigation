@@ -10,7 +10,9 @@ from navigationAlgoCode import *
 def init(data):
     data.pointList = []
     data.drawing = True
-    data.distance = 10
+    data.photoSize = 20 #size of each photo
+    overlap = 1.05 #overlap factor
+    data.distance = data.photoSize/overlap #distance between photo points
     data.photoPoints = []
     # load data.xyz as appropriate
     pass
@@ -41,7 +43,11 @@ def redrawAll(canvas, data):
         connectPointsInList(canvas, data.pointList, len(data.pointList))
         if data.photoPoints == []:
             data.photoPoints = getAllPoints(data.pointList, data.distance)
-        drawPointsInList(canvas, data.photoPoints, rPoint, "red")
+        for point in data.photoPoints:
+            x, y = point[0], point[1]
+            halfLen = data.photoSize/2
+            canvas.create_rectangle(x-halfLen, y-halfLen, x+halfLen, y+halfLen, 
+            fill = "red")
 
 def drawPointsInList(canvas, pointList, rPoint, color = "white"):
     for index in range(len(pointList)):
