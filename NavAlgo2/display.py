@@ -1,7 +1,10 @@
-import tkMessageBox
-
+#import tkMessageBox
+#TODO this works with python3, not python2
+#for some odd reason, the nav code does not work in python2, even
+# though they are unrelated
 import numpy as np
-import Tkinter as tk
+import tkinter as tk
+from tkinter import *
 import navigationAlgoCode as nav
 
 class App:
@@ -17,7 +20,7 @@ class App:
         frame2=tk.Frame(frame)
         frame2.pack(side=tk.TOP)
 
-        self.drawPathButton = tk.Button(frame1, text="Draw Path", command=self.drawPath)
+        self.drawPathButton = tk.Button(frame1, text="Draw Path", command=self.drawPathWrapper)
         self.drawPathButton.pack(side=tk.LEFT)
         self.resetButton=tk.Button(frame1,text="Reset",command=self.reset)
         self.resetButton.pack(side=tk.LEFT)
@@ -36,7 +39,7 @@ class App:
         self.reset()
 
     def showInfo(self):
-        tkMessageBox.showinfo('EWB Drone Nav Algo GUI',"""
+        messagebox.showinfo('EWB Drone Nav Algo GUI',"""
             Welcome to the EWB Drone Navigation Algorithm GUI!
             
             First, click to set the boundary vertices of your region,
@@ -49,14 +52,19 @@ class App:
             region. Hit 'Reset' to reset the screen.
         """)
 
-    def drawPath(self):
-        #TODO this is the part where it doesn't seem to work
-        stride = 3
+    def drawPathWrapper(self):
+        self.submitW=Toplevel(self.master)
+        self.submitWapp= promptStrideLength(self.submitW,self)
+
+    def drawPath(self,stride=10):
         points = nav.getAllPoints(self.vertices, stride)
         idx=0
         while(idx<len(points)):
             start=points[idx]
             end=points[(idx+1)%len(points)]
+            radius = 1
+            self.canvas.create_oval(start[0] - radius, start[1] + radius, start[0] + radius, start[1] - radius)
+            self.canvas.create_oval(end[0] - radius, end[1] + radius, end[0] + radius, end[1] - radius)
             self.canvas.create_line(start[0],start[1],end[0],end[1])
             idx+=1
 
@@ -106,6 +114,20 @@ class App:
         self.canvas.create_line(0, 0, 0, self.cs)
         self.canvas.create_line(self.cs, 0, self.cs, self.cs)
         self.canvas.create_line(0, self.cs, self.cs, self.cs)
+
+class promptStrideLength:
+    def __init__(self,master,mainw):
+        self.master=master
+        self.mainw = mainw
+        self.lab = tk.Label(master, text="Stride Length = ").pack()
+        self.e = tk.Entry(master)
+        self.e.pack(padx=5)
+        self.butt = tk.Button(master, text="OK", command=self.submit)
+        self.butt.pack(pady=5)
+
+    def submit(self):
+        self.mainw.drawPath(stride=int(self.e.get()))
+        self.master.destroy()
 
 if __name__=='__main__':
     root = tk.Tk()
