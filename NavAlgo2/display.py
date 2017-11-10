@@ -5,7 +5,9 @@
 import numpy as np
 import tkinter as tk
 from tkinter import *
+from tkinter import messagebox
 import navigationAlgoCode as nav
+import sys
 
 class App:
     def __init__(self,master):
@@ -19,8 +21,11 @@ class App:
         frame1.pack(side=tk.TOP)
         frame2=tk.Frame(frame)
         frame2.pack(side=tk.TOP)
+        if(len(sys.argv)>1):
+            self.drawPathButton = tk.Button(frame1, text="Draw Path", command=self.drawPath)
+        else:
+            self.drawPathButton = tk.Button(frame1, text="Draw Path", command=self.drawPathWrapper)
 
-        self.drawPathButton = tk.Button(frame1, text="Draw Path", command=self.drawPathWrapper)
         self.drawPathButton.pack(side=tk.LEFT)
         self.resetButton=tk.Button(frame1,text="Reset",command=self.reset)
         self.resetButton.pack(side=tk.LEFT)
@@ -48,6 +53,10 @@ class App:
             length in pixels. Enter the desired length (be reasonable!) 
             and hit OK.
             
+            Alternatively, provide a stride length in the command prompt 
+            by running `python display.py [stride]` where [stride] is 
+            the desired length.
+            
             The algorithm should display the planned path through the 
             region. Hit 'Reset' to reset the screen.
         """)
@@ -57,7 +66,10 @@ class App:
         self.submitWapp= promptStrideLength(self.submitW,self)
 
     def drawPath(self,stride=10):
-        points = nav.getAllPoints(self.vertices, stride)
+        if(len(sys.argv)>1):
+            points = nav.getAllPoints(self.vertices, int(sys.argv[1]))
+        else:
+            points = nav.getAllPoints(self.vertices, stride)
         idx=0
         while(idx<len(points)):
             start=points[idx]
