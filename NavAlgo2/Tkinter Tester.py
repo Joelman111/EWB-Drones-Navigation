@@ -14,6 +14,7 @@ def init(data):
     overlap = 1.05 #overlap factor
     data.distance = data.photoSize/overlap #distance between photo points
     data.photoPoints = []
+    data.reset = False
     # load data.xyz as appropriate
     pass
 
@@ -28,6 +29,8 @@ def keyPressed(event, data):
         init(data)
         data.photoPoints = []
     # use event.char and event.keysym
+    elif event.keysym == "s":
+        data.reset = True
     pass
 
 def timerFired(data):
@@ -39,6 +42,8 @@ def redrawAll(canvas, data):
     drawPointsInList(canvas, data.pointList, rPoint)
     if data.drawing:
         connectPointsInList(canvas, data.pointList, len(data.pointList)-1)
+    elif data.reset:
+        init(data)
     else:
         connectPointsInList(canvas, data.pointList, len(data.pointList))
         if data.photoPoints == []:
@@ -46,7 +51,7 @@ def redrawAll(canvas, data):
         for point in data.photoPoints:
             x, y = point[0], point[1]
             halfLen = data.photoSize/2
-            canvas.create_rectangle(x-halfLen, y-halfLen, x+halfLen, y+halfLen, 
+            canvas.create_rectangle(x-halfLen, y-halfLen, x+halfLen, y+halfLen,
             fill = "red")
 
 def drawPointsInList(canvas, pointList, rPoint, color = "white"):
@@ -59,7 +64,7 @@ def connectPointsInList(canvas, pointList, lenPoints):
         index2 = (index+1)%len(pointList)
         canvas.create_line(pointList[index], pointList[index2])
 
-        
+
 
 ####################################
 # use the run function as-is
@@ -71,7 +76,7 @@ def run(width=500, height=500):
         canvas.create_rectangle(0, 0, data.width, data.height,
                                 fill='white', width=0)
         redrawAll(canvas, data)
-        canvas.update()    
+        canvas.update()
 
     def mousePressedWrapper(event, canvas, data):
         mousePressed(event, data)
