@@ -2,9 +2,15 @@
 
 import math
 import copy
+import numpy as np
 
 def getAllPoints(vertexList, distance):
-    #main function: takes in initial input and returns final output
+    #main function
+    """
+    :param vertexList: ordered list of vertices, the fewest needed to describe the region
+    :param distance: stride length
+    :return: ordered list of points at which to take a photo
+    """
     perimeterPoints = getPerimeterPoints(vertexList, distance)
     return getOutputPoints(vertexList, perimeterPoints, distance)
 
@@ -37,7 +43,7 @@ def getPointsBtwnVertices(v1, v2, dx):
     points = []
     v1x, v2x = v1[0], v2[0]
     v1y, v2y = v1[1], v2[1]
-    if math.isclose(v1x, v2x):
+    if np.isclose(v1x, v2x):
         return getPointsonVerticalLine(v1x, v1y, v2y, dx)
     if v2x-v1x<0: dx = -dx
     xPoints = int((v2x - v1x) / dx)
@@ -125,4 +131,6 @@ def getPointsonVerticalLine(x, y0, y1, distance):
     return points
 
 #TEST CASES
+print("testing navigationAlgoCode")
 print(getAllPoints([(0, 0), (3, 0), (1.5, 3**0.5 * 1.5)], 1))
+print("test seems to be a success!")
