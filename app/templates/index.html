@@ -111,9 +111,12 @@
         position: location,
         map: map
       });
+
+
       coordinates.push(location);
       markers.push(marker);
       document.getElementById("markers").appendChild(document.createTextNode(location));
+
     }
 
 
@@ -132,10 +135,13 @@
         fillOpacity: 0.35
       });
       polygon.setMap(map);
+      $.get("/get_path/" + coordinates, function(resp){
+        document.getElementById("markers").innerHTML = resp;
+      });
     }
 
 
-  
+
 
 
 

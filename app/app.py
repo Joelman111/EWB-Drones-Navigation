@@ -11,7 +11,7 @@ def index():
 def get_path(coords):
     #implement
     print(coords)
-    return
+    return "got it"
 
 def main():
     app.run(host='0.0.0.0')
