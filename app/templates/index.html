@@ -1,5 +1,166 @@
 <!DOCTYPE html>
 <html>
-<h1> Hello world</h1>
+
+<head>
+  <!--Import Google Icon Font-->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.5/css/materialize.min.css">
+
+  <!--Import materialize.css-->
+  <link type="text/css" rel="stylesheet" href="css/materialize.min.css" media="screen,projection" />
+
+  <!--Let browser know website is optimized for mobile-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    #map {
+      height: 400px;
+      width: 100%;
+    }
+  </style>
+
+</head>
+
+
+<body>
+  <div class='container'>
+    <div class='row'>
+      <div class='center'>
+        <h3> Google Maps Demo </h3>
+        <div id="map"></div> <br />
+        <div class='column'>
+          <button id="draw" class="btn waves-effect waves-light"
+                  type="submit" name="action"
+                  onclick="draw_polygon();">Draw Polygon
+            </button>
+            <button id="clear_btn" class="btn waves-effect waves-light"
+                    type="submit" name="action"
+                    onclick="clear_fn();">Clear
+              </button>
+        </div>
+        <div id="markers"></div>
+      </div>
+    </div>
+  </div>
+
+  <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+  <script type="text/javascript" src="js/materialize.min.js"></script>
+  <script type="text/javascript" src="javascripts/jquery.googlemap.js"></script>
+
+  <script>
+    var map;
+    var infoWindow;
+    var coordinates = [];
+    var markers = [];
+    var polygon;
+
+    function initMap() {
+      map = new google.maps.Map(document.getElementById('map'), {
+        center: {
+          lat: 40.440291,
+          lng: -79.945741
+        },
+        zoom: 100,
+        mapTypeId: 'satellite'
+      });
+      map.setTilt(0);
+      infoWindow = new google.maps.InfoWindow;
+
+      polygon = new google.maps.Polygon({
+        paths: coordinates,
+        strokeColor: '#FF0000',
+        strokeOpacity: 0.8,
+        strokeWeight: 2,
+        fillColor: '#FF0000',
+        fillOpacity: 0.35
+      });
+
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+          var pos = {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude
+          };
+
+          infoWindow.setPosition(pos);
+          infoWindow.setContent('Location found.');
+          infoWindow.open(map);
+          map.setCenter(pos);
+        }, function() {
+          handleLocationError(true, infoWindow, map.getCenter());
+        });
+      } else {
+        // Browser doesn't support Geolocation
+        handleLocationError(false, infoWindow, map.getCenter());
+      }
+      google.maps.event.addListener(map, 'click', function(event) {
+        place_marker(event.latLng);
+
+      });
+    }
+
+    function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+      infoWindow.setPosition(pos);
+      infoWindow.setContent(browserHasGeolocation ?
+        'Error: The Geolocation service failed.' :
+        'Error: Your browser doesn\'t support geolocation.');
+      infoWindow.open(map);
+    }
+
+    function place_marker(location) {
+      var marker = new google.maps.Marker({
+        position: location,
+        map: map
+      });
+
+
+      coordinates.push(location);
+      markers.push(marker);
+      document.getElementById("markers").appendChild(document.createTextNode(location));
+
+    }
+
+
+    function draw_polygon() {
+      if (coordinates.length == 0) {
+        return;
+      } else {
+        polygon.setMap(null);
+      }
+      polygon = new google.maps.Polygon({
+        paths: coordinates,
+        strokeColor: '#FF0000',
+        strokeOpacity: 0.8,
+        strokeWeight: 2,
+        fillColor: '#FF0000',
+        fillOpacity: 0.35
+      });
+      polygon.setMap(map);
+      $.get("/get_path/" + coordinates, function(resp){
+        document.getElementById("markers").innerHTML = resp;
+      });
+    }
+
+
+
+
+
+
+    function clear_fn() {
+      for (var i = 0; i < markers.length; i++) {
+        markers[i].setMap(null);
+      }
+      markers = [];
+      coordinates = [];
+      polygon.setMap(null);
+      document.getElementById("markers").innerHTML = "";
+      console.log("clear");
+
+    }
+
+  </script>
+
+  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC485wtcaeL1yZrciuDWrliKSC74k8UODM&callback=initMap"></script>
+
+</body>
 
 </html>
