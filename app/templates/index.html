@@ -16,6 +16,9 @@
       height: 400px;
       width: 100%;
     }
+    .disabled {
+      pointer-events: none;
+    }
   </style>
 
 </head>
@@ -36,9 +39,14 @@
                     type="submit" name="action"
                     onclick="clear_fn();">Clear
               </button>
+              <button id="send" class="btn waves-effect waves-light disabled"
+                      type="submit" name="action"
+                      onclick="send_coords();">Send to Drone
+                </button>
         </div>
         <div id="markers"></div>
       </div>
+      <div class='center' id="camera" style='display: none;'><p>CAMERA GOES HERE</p></div>
     </div>
   </div>
 
@@ -119,6 +127,13 @@
 
     }
 
+    function send_coords() {
+      document.getElementById("camera").style.display = 'block';
+      $.get("/get_path/" + coordinates, function(resp){
+        document.getElementById("markers").innerHTML = resp;
+        
+      });
+    }
 
     function draw_polygon() {
       if (coordinates.length == 0) {
@@ -135,9 +150,7 @@
         fillOpacity: 0.35
       });
       polygon.setMap(map);
-      $.get("/get_path/" + coordinates, function(resp){
-        document.getElementById("markers").innerHTML = resp;
-      });
+      $('#send').removeClass('disabled');
     }
 
 

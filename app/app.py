@@ -1,6 +1,6 @@
 from flask import Flask, render_template
 from navigationAlgoCode import *
-import requests
+import requests, jsonify
 
 app = Flask(__name__)
 
@@ -12,10 +12,8 @@ def index():
 def get_path(coords):
     #implement
     print("Sending coords: " + coords)
-    points = []
-    for coord in coords:
-        points += coord
-    return "OUTPUT POINTS HERE"
+
+    return jsonify(getAllPoints(coords, .1))
 
 def main():
     app.run(host='0.0.0.0')
