@@ -13,8 +13,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
     #map {
-      height: 400px;
-      width: 100%;
+      height: 500px;
+      width: 200%;
     }
   </style>
 
@@ -24,21 +24,25 @@
 <body>
   <div class='container'>
     <div class='row'>
-      <div class='center'>
+      <div class='left'>
         <h3> Google Maps Demo </h3>
-        <div id="map"></div> <br />
         <div class='column'>
-          <button id="draw" class="btn waves-effect waves-light"
-                  type="submit" name="action"
-                  onclick="draw_polygon();">Draw Polygon
-            </button>
-            <button id="clear_btn" class="btn waves-effect waves-light"
+          <div id="map"></div> <br />
+            <button id="draw" class="btn waves-effect waves-light"
                     type="submit" name="action"
-                    onclick="clear_fn();">Clear
+                    onclick="draw_polygon();">Draw Polygon
               </button>
+              <button id="clear_btn" class="btn waves-effect waves-light"
+                      type="submit" name="action"
+                      onclick="clear_fn();">Clear
+                </button>
         </div>
-        <div id="markers"></div>
+          <div id="markers"></div>
       </div>
+      <div class='right'>
+        <div id="outputpoints">
+          <p>Test</p>
+        </div>
     </div>
   </div>
 
@@ -136,7 +140,7 @@
       });
       polygon.setMap(map);
       $.get("/get_path/" + coordinates, function(resp){
-        document.getElementById("markers").innerHTML = resp;
+        document.getElementById("outputpoints").innerHTML = "Output Points: " + resp;
       });
     }
 
