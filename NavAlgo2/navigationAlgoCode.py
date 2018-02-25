@@ -12,6 +12,7 @@ def getAllPoints(vertexList, distance):
     :return: ordered list of points at which to take a photo
     """
     perimeterPoints = getPerimeterPoints(vertexList, distance)
+    print(perimeterPoints)
     return getOutputPoints(vertexList, perimeterPoints, distance)
 
 def getPerimeterPoints(vertexList, distance):
@@ -46,7 +47,8 @@ def getPointsBtwnVertices(v1, v2, dx):
     if np.isclose(v1x, v2x):
         return getPointsonVerticalLine(v1x, v1y, v2y, dx)
     if v2x-v1x<0: dx = -dx
-    xPoints = int((v2x - v1x) / dx)
+    xPoints = int((v2x - v1x) / dx+1)
+    print(xPoints)
     dy = (v2y - v1y) / (v2x - v1x) * dx
     x, y = v1x, v1y
     for pointNo in range(xPoints):
@@ -74,8 +76,7 @@ def getOutputPoints(vertexList, perimeterPoints, distance):
         if y1 == None:
             additionalPoints = [pPoint]
         else:
-            additionalPoints = getPointsonVerticalLine(x, y0, y1, distance) + \
-            [(x, y1)]
+            additionalPoints = getPointsonVerticalLine(x, y0, y1, distance) + [(x, y1)]
         additionalPointsCopy = copy.deepcopy(additionalPoints)
         for point in additionalPointsCopy:
             if point in outputPoints:
@@ -134,5 +135,6 @@ def getPointsonVerticalLine(x, y0, y1, distance):
 
 #TEST CASES
 print("testing navigationAlgoCode")
-print(getAllPoints([(0, 0), (3, 0), (1.5, 3**0.5 * 1.5)], 1))
+#print(getAllPoints([(0, 0), (3, 0), (1.5, 3**0.5 * 1.5)], 1))
 print("test seems to be a success!")
+#print(getPointsBtwnVertices((50,50),(200,50),19.2))
